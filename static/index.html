@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwen3-TTS Tiny TR</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div>
+      <h1>Qwen3-TTS <span class="accent">Tiny</span> · Türkçe</h1>
+      <p class="sub">Referans sesle Türkçe konuşma sentezi, tamamen yerel çalışır</p>
+    </div>
+    <div id="status" class="pill">bağlanıyor…</div>
+  </header>
+
+  <main class="grid">
+    <section class="col">
+      <div class="card">
+        <div class="card-head">
+          <h2>Metin</h2>
+          <span id="counter" class="muted small">0 karakter · 0 cümle</span>
+        </div>
+        <textarea id="text" spellcheck="false" placeholder="Konuşulmasını istediğiniz metni buraya yazın."></textarea>
+        <div class="row opts">
+          <label class="check" title="Eğitim metninde büyük İ ve I yoktu; bunları i ve ı harfine çevirir">
+            <input type="checkbox" id="fixcase"> İ/I → i/ı
+          </label>
+          <label class="check" title="Rakamları Türkçe okunuşuna çevirir (1.250 → bin iki yüz elli)">
+            <input type="checkbox" id="numbers"> Sayıları yazıya çevir
+          </label>
+        </div>
+        <div class="row actions">
+          <button id="generate" class="btn primary">Seslendir <kbd>Ctrl+Enter</kbd></button>
+          <button id="stop" class="btn" hidden>Durdur</button>
+          <div id="progressWrap" class="progress" hidden><div id="progressBar"></div></div>
+          <span id="progressText" class="muted small"></span>
+        </div>
+      </div>
+
+      <div class="card" id="resultCard" hidden>
+        <div class="card-head">
+          <h2>Sonuç</h2>
+          <span id="resultMeta" class="muted small"></span>
+        </div>
+        <audio id="player" controls></audio>
+        <div class="row">
+          <a id="download" class="btn small" download>WAV indir</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Geçmiş</h2>
+          <button id="refreshHistory" class="btn small ghost">Yenile</button>
+        </div>
+        <div id="history" class="history"><p class="muted small">Henüz bir şey üretilmedi.</p></div>
+      </div>
+    </section>
+
+    <aside class="col">
+      <div class="card">
+        <div class="card-head">
+          <h2>Ses</h2>
+          <span class="muted small">5–10 sn temiz referans</span>
+        </div>
+        <select id="voice"></select>
+        <audio id="voicePreview" controls hidden></audio>
+        <p id="voiceHint" class="hint" hidden></p>
+        <div class="row wrap">
+          <label class="btn small" for="voiceFile">Yükle…</label>
+          <input id="voiceFile" type="file" accept="audio/*,.wav,.mp3,.flac,.ogg,.m4a,.webm" hidden>
+          <button id="recBtn" class="btn small">● Kaydet</button>
+          <button id="deleteVoice" class="btn small danger" disabled>Sil</button>
+        </div>
+
+        <div id="pendingBox" class="pending" hidden>
+          <p class="small">Yeni referans <span id="pendingInfo" class="muted"></span></p>
+          <audio id="pendingAudio" controls></audio>
+          <div class="row">
+            <input id="pendingName" type="text" placeholder="Ses adı" maxlength="60">
+            <button id="pendingSave" class="btn small primary">Kaydet</button>
+            <button id="pendingDiscard" class="btn small">Vazgeç</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h2>Ayarlar</h2>
+          <button id="resetSettings" class="btn small ghost">Sıfırla</button>
+        </div>
+        <div class="field">
+          <label for="temperature">Sıcaklık <output id="temperature-val"></output></label>
+          <input type="range" id="temperature" min="0.1" max="1.5" step="0.05">
+        </div>
+        <div class="field">
+          <label for="subtemp">Alt konuşmacı sıcaklığı <output id="subtemp-val"></output></label>
+          <input type="range" id="subtemp" min="0.1" max="1.5" step="0.05">
+        </div>
+        <div class="field">
+          <label for="reppen">Tekrar cezası <output id="reppen-val"></output></label>
+          <input type="range" id="reppen" min="1" max="1.5" step="0.01">
+        </div>
+        <div class="field">
+          <label for="pause">Cümleler arası duraklama <output id="pause-val"></output></label>
+          <input type="range" id="pause" min="0" max="1500" step="50">
+        </div>
+        <div class="field">
+          <label for="seed">Tohum (seed) <span class="muted small">(-1 = rastgele)</span></label>
+          <input type="number" id="seed" min="-1" step="1">
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
+<div id="toast" class="toast" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
