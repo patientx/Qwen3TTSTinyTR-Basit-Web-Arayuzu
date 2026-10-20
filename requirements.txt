@@ -1,0 +1,5 @@
+torch
+qwen-tts
+soundfile
+numpy
+hf_xet
